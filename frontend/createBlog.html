@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body>
+   <div class="card container">
+<div class="card-header">
+  <h1 class="display-3 fw-bold">Post Your Blog</h1>
+</div>
+  <div class="row">
+    <div class="card-body col-lg-9">
+      <form class="container"> 
+       
+        <div class="mb-3">
+          <label class="form-label">Title:</label>
+          <input type="text" class="form-control" id="title">
+          <label class="form-label">Featured Image Url:</label>
+          <input type="text" class="form-control" id="FeaturedImg">
+          <label class="form-label">Category:</label>
+          <select class="form-select mb-2" aria-label="Default select example" id="category">
+            <option selected>Choose Category</option>
+            <option value="Makeup">Makeup</option>
+            <option value="Tech">Tech</option>
+            <option value="Hacks">Hacks</option>
+            <option value="Travel">Travel</option>
+          </select>
+          <label class="form-label">Description: <span class="text-secondary" style="font-size: 10px;"><span id="limit">0</span>/300</span></label>
+          <textarea name="" id="description" class="form-control" rows="20"></textarea>
+          <label class="form-label">Author Name:</label>
+          <input type="text" class="form-control" id="Author">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+     </div>
+
+     <div class="col-lg-3">
+      <h4 class="p-3 fw-bold">Recent Blogs:</h4>
+      <ul class="list-group list-group-flush recent-blogs">
+        
+       
+     
+    </ul>
+     </div>
+  </div>
+   </div>
+
+    <script>
+      let titleText=document.getElementById('title')
+      let descriptionText=document.getElementById('description')
+      let ImgUrl=document.getElementById('FeaturedImg')
+      let AuthorText=document.getElementById('Author')
+      let limit=document.getElementById('limit')
+      let recentBlog=document.querySelector('.recent-blogs')
+      let categoryText=document.querySelector('#category')
+      
+      descriptionText.addEventListener('keydown',()=>{
+      let descLen=descriptionText.value;
+      limit.innerHTML=descLen.length;
+      if(descLen.length>=300){
+        descriptionText.style.border='2px solid red'
+      }
+      else{
+        descriptionText.style.border='1px solid #dee2e6'
+      }
+
+      })
+
+      document.querySelector('form').addEventListener('submit',(e)=>{
+        e.preventDefault();
+        let title=titleText.value;
+        let description=descriptionText.value;
+        let Img=ImgUrl.value;
+        let author=AuthorText.value;
+        let category=categoryText.value;
+        let sendData=()=>{
+          fetch('http://localhost:5000/blogs',{
+            method:'POST',
+            headers:{'content-type':'application/json'},
+            body:JSON.stringify({title,description,Img,author,category})
+          })
+          .then((conv)=>conv.json())
+          .then((res)=>{window.location.href=`http://127.0.0.1:5501/frontend/singleBlog.html?id=${res.id}`})
+        }
+        sendData()
+      })
+
+      fetch('http://localhost:5000/blogs')
+      .then((res)=>res.json())
+      .then((list)=>{
+        list.forEach((li)=>{
+          recentBlog.innerHTML+=`
+          <li class="list-group-item py-3 text-secondary">
+          <a href=./singleBlog.html?id=${li.id} target="_main" class="text-decoration-none text-dark">
+            <div class="d-flex"><img src=${li.Img}  class="h-posts w-25" style="object-fit:cover;"><div class="w-75 px-1"><div class="fw-bold fs-posts" style="height: 22px;
+    overflow: hidden;">${li.title}</div><span class="text-warning fw-bold px-1">${li.category}</span><span class="text-secondary ">${li.author}</span></div></div></a></li>
+          `
+        
+        })
+      })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
