@@ -1,0 +1,25 @@
+.h-desc{
+    height: 150px;
+    overflow: hidden;
+}
+.blog-container:nth-child(even){
+flex-direction: row-reverse !important;
+}
+.bg-main{
+    background: url('../media/bg-main.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;
+}
+.bg-tech{
+    background: url('../media/bg-tech.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;
+}
+.bg-travel{
+    background: url('../media/bg-travel.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;
+}
